@@ -37,6 +37,8 @@
  *
  *   int           COLLECTION_length(COLLECTION c)
  *
+ *
+
  *   append(COLLECTION c1, COLLECTION c2)
  *   prepend(COLLECTION c1, COLLECTION c2)
  *
@@ -44,9 +46,7 @@
  *   map (func, type), mapreduce (fun, type), filter (pred)
  *
  * *********************************************************
- * Example Usage
- *
- *  ThreadDeque threadq;
+ * Example Usage:
  *
  * DEQUE(ThreadDeque, Thread
  *    int val1;
@@ -79,13 +79,13 @@
   typedef struct ELEMENT##_s* ELEMENT;					\
   /** automatic type: ELEMENTIter is an iter on lists of ELEMENT */	\
   typedef ELEMENT ELEMENT##Iter;					\
-  typedef struct ELEMENT##_args_s ELEMENT##_args;			\
-  typedef void*(*ELEMENT##_lambda)(struct ELEMENT##_args_s*);
+  typedef struct ELEMENT##_args_s ELEMENT##_args;
 
-/**@hideinitializer
+/**@hideinitializer\
  * The effective type declaration for lists */
 #define DEQUE_CREATE_TYPE(COLLECTION, ELEMENT, REST)			\
 									\
+  /* Define the underlying core struct for ELEMENT */			\
   struct ELEMENT##_args_s						\
   {									\
     int argc;								\
@@ -218,7 +218,7 @@
     }									\
     									\
     asprintf(&__result,							\
-	     "{'id' : %d, '_prev' : %d, '_next' : %d, '_name' : '%s'}",	\
+	     "{'id' : %d, '_prev' : %d, '_next' : %d, '_name' : '%s'}", \
 	     (e->_id), __prv, __nxt, e->_name);				\
     return __result;							\
   }									\
@@ -404,4 +404,15 @@
       i=i->_next;							\
     }									\
     return NULL;							\
+  }									\
+									\
+  COLLECTION COLLECTION##_map(COLLECTION l, ELEMENT lambda(ELEMENT))	\
+  {									\
+    ELEMENT##Iter i = l->_head;						\
+    int k=0;								\
+    while(i!=NULL) {							\
+      i = (ELEMENT) lambda(i);						\
+      i=i->_next;							\
+    }								        \
+    return l;								\
   }
