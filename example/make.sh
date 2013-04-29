@@ -2,5 +2,5 @@
 
 rm deque.h
 ln -s ../deque.h deque.h
-gcc -o test item.c item.h deque.h #2&1| less
+gcc -o test deque.h item.h item.c #2&1| less
 chmod +x test
